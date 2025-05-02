@@ -1,0 +1,81 @@
+---
+title: "Izzy's Final Project"
+author: "Izzy Grabowski"
+date: "2025-05-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## IDEAS (DELETE THIS)
+
+Where I got the data from: https://catalog.data.gov/dataset/electric-vehicle-population-data
+
+-make several ggplots
+-clean data
+- CREATE NEW variables using the 'mutate' function
+
+1. When and where are EVs most popular?
+Which counties and cities in Washington have the highest number of registered EVs?
+Are rural or urban areas more likely to adopt EVs?
+
+2. What types of electric vehicles are being adopted?
+What is the distribution of BEVs vs. PHEVs by county or city?
+
+3. How do economic or policy factors relate to EV adoption?
+
+4. What is the electric range distribution, and how does it vary?
+What are the most common electric ranges?
+
+5. Are there geographic clusters of EV use related to utility providers?
+Do certain Electric Utilities have more EV customers?
+Are these utilities investing more in infrastructure, like charging stations?
+Is EV adoption correlated with specific utility regions?
+
+6. How does vehicle type correlate with census tracts?
+Are EVs more common in specific 2020 Census Tracts?
+
+
+
+## Introduction
+
+
+
+In this project, I have explored data about electric vehicles. 
+
+
+
+```{r}
+##CLEANING
+
+library(readr)
+Electric_Vehicle_Population_Data <- read_csv("~/Desktop/Electric_Vehicle_Population_Data.csv")
+#View(Electric_Vehicle_Population_Data)
+
+colnames(Electric_Vehicle_Population_Data)
+
+summary(Electric_Vehicle_Population_Data)
+
+ev_data <- Electric_Vehicle_Population_Data
+
+str(ev_data)
+summary(ev_data)
+head(ev_data)
+
+
+ev_data <- na.omit(ev_data)
+colSums(is.na(ev_data)) # remove rows with lots of missing data
+
+
+ev_data$City <- tolower(ev_data$City)
+ev_data$Make <- toupper(ev_data$Make) # this makes text in the data consistent
+
+
+ev_data <- ev_data[!duplicated(ev_data), ] # getting rid of duplicates
+
+
+```
+
