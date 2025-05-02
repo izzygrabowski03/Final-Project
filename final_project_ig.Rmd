@@ -79,3 +79,125 @@ ev_data <- ev_data[!duplicated(ev_data), ] # getting rid of duplicates
 
 ```
 
+
+## Top 10 Counties and Cities by EV Registrations
+-Which counties and cities in Washington have the highest number of registered EVs?
+
+
+
+```{r}
+
+library(dplyr)
+library(ggplot2)
+
+# Group by County and count
+top_counties <- ev_data %>%
+  group_by(County) %>%
+  summarise(EV_Count = n()) %>%
+  arrange(desc(EV_Count)) %>%
+  slice_max(EV_Count, n = 10)  # Top 10 counties
+
+# Plot
+ggplot(top_counties, aes(x = reorder(County, EV_Count), y = EV_Count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Top 10 Counties in Washington by EV Registrations",
+       x = "County", y = "Number of EVs")
+
+# Group by City and count
+top_cities <- ev_data %>%
+  group_by(City) %>%
+  summarise(EV_Count = n()) %>%
+  arrange(desc(EV_Count)) %>%
+  slice_max(EV_Count, n = 10)  # Top 10 cities
+
+# Plot
+ggplot(top_cities, aes(x = reorder(City, EV_Count), y = EV_Count)) +
+  geom_bar(stat = "identity", fill = "darkgreen") +
+  coord_flip() +
+  labs(title = "Top 10 Cities in Washington by EV Registrations",
+       x = "City", y = "Number of EVs")
+
+
+```
+
+# When and where are EVs most popular?
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Group by Model Year
+ev_trend <- ev_data %>%
+  group_by(`Model Year`) %>%
+  summarise(EV_Count = n())
+
+# Plot
+ggplot(ev_trend, aes(x = `Model Year`, y = EV_Count)) +
+  geom_line(color = "blue") +
+  geom_point() +
+  labs(title = "EV Registrations by Model Year",
+       x = "Model Year", y = "Number of EVs") +
+  theme_minimal()
+
+
+# Group by Model Year and County
+ev_year_location <- ev_data %>%
+  group_by(`Model Year`, County) %>%
+  summarise(EV_Count = n())
+
+# Plot: use facet to compare counties over time
+ggplot(ev_year_location, aes(x = `Model Year`, y = EV_Count)) +
+  geom_line() +
+  facet_wrap(~ County, scales = "free_y") +
+  labs(title = "EV Popularity Over Time by County",
+       x = "Model Year", y = "Number of EVs") +
+  theme_minimal()
+
+
+ev_peak <- ev_data %>%
+  group_by(County, `Model Year`) %>%
+  summarise(EV_Count = n()) %>%
+  arrange(desc(EV_Count)) %>%
+  slice(1)
+
+print(ev_peak)
+
+```
+
+
+
+
+
+
+
+
+
+```{r}
+unique(ev_data$County) # figure out which counties are rural and which ones are urban from this site: https://doh.wa.gov/sites/default/files/legacy/Documents/Pubs/609003.pdf
+
+
+
+urban_counties <- c("Whatcom", "Snohomish", "Kitsap", "King", "Pierce", "Thurston", "Clark", "Benton", "Spokane")
+
+# Add a new column: Urban vs Rural
+ev_data <- ev_data %>%
+  mutate(Area_Type = ifelse(County %in% urban_counties, "Urban", "Rural"))
+
+# Count EVs by area type
+area_summary <- ev_data %>%
+  group_by(Area_Type) %>%
+  summarise(EV_Count = n())
+
+# Plot
+ggplot(area_summary, aes(x = Area_Type, y = EV_Count, fill = Area_Type)) +
+  geom_bar(stat = "identity") +
+  labs(title = "EV Adoption: Urban vs Rural Areas",
+       x = "Area Type", y = "Number of EVs") +
+  theme_minimal()
+
+
+
+
+```
