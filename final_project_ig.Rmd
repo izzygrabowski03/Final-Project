@@ -121,6 +121,8 @@ ggplot(top_cities, aes(x = reorder(City, EV_Count), y = EV_Count)) +
 
 ```
 
+Based on these plots, Seattle and King county have the largest number of electric vehicles. Seattle is in King county so these plots match the data. 
+
 # When and where are EVs most popular?
 
 
@@ -166,12 +168,11 @@ print(ev_peak)
 
 ```
 
-
+It looks like that the peak EV registrations was in 2023, which steeply trended down in 2025. This could possibly be because prices went up significantly, or many people already had electric vehicles and the demand lowered. 
 
 
 
 Are rural or urban areas more likely to adopt EVs?
-
 
 
 
@@ -198,6 +199,54 @@ ggplot(area_summary, aes(x = Area_Type, y = EV_Count, fill = Area_Type)) +
        x = "Area Type", y = "Number of EVs") +
   theme_minimal()
 
+
+
+
+```
+From this result, it is clear that electric vehicles are more wide spread in urban counties. This makes sense because urban areas can be more environmentally friendly. Urban areas, especially cities, value efficiency in resources is some cases. So, it makes sense more people within cities would have electric vehicles, there also is probably more access to charging stations in urban areas. 
+
+
+## 2
+
+What types of electric vehicles are being adopted?
+
+```{r}
+
+library(dplyr)
+library(ggplot2)
+
+# Count of each EV type
+ev_type_summary <- ev_data %>%
+  group_by(`Electric Vehicle Type`) %>%
+  summarise(EV_Count = n())
+
+# Bar plot
+ggplot(ev_type_summary, aes(x = reorder(`Electric Vehicle Type`, -EV_Count), y = EV_Count, fill = `Electric Vehicle Type`)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Types of Electric Vehicles Adopted in Washington",
+       x = "Electric Vehicle Type", y = "Number of EVs") +
+  theme_minimal()
+
+
+```
+
+
+What is the distribution of BEVs vs. PHEVs by county or city?
+
+```{r}
+
+# Count EV types by County
+ev_by_type_and_county <- ev_data %>%
+  group_by(County, `Electric Vehicle Type`) %>%
+  summarise(EV_Count = n())
+
+# Stacked bar chart
+ggplot(ev_by_type_and_county, aes(x = reorder(County, -EV_Count), y = EV_Count, fill = `Electric Vehicle Type`)) +
+  geom_bar(stat = "identity") +
+  labs(title = "BEV vs. PHEV Distribution by County",
+       x = "County", y = "Number of EVs") +
+  theme_minimal() +
+  coord_flip()
 
 
 
