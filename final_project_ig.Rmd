@@ -170,6 +170,7 @@ print(ev_peak)
 
 
 
+Are rural or urban areas more likely to adopt EVs?
 
 
 
