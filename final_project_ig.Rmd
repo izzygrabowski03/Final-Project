@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## IDEAS (DELETE THIS)
 
 Where I got the data from: https://catalog.data.gov/dataset/electric-vehicle-population-data
+https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=EMM_EPM0_PTE_SWA_DPG&f=M 
 
 -make several ggplots
 -clean data
@@ -259,6 +260,7 @@ This distribution is reflecting how the urban counties have a higher number of b
 
 
 How do economic or policy factors relate to EV adoption?
+Here, I am using data on retail gas prices in Washington every month. 
 
 
 ```{r}
@@ -267,24 +269,53 @@ library(dplyr)
 library(tidyr)
 
 # Read the CSV file and skip the first four rows of metadata
-Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices <- read_csv("~/Documents/Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices.csv", skip = 4)
+Gas_Prices <- read_csv("~/Documents/Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices.csv", skip = 4)
 
-# View the structure to ensure data is being read correctly
-str(Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices)
+head(Gas_Prices)
 
-
-
-# View the modified data
-View(Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices)
-
-# Check column names of the dataset
-colnames(Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices)
+#str(Gas_Prices)
+#View(Gas_Prices)
+#colnames(Gas_Prices)
 
 
 
 ```
 
+```{r}
 
 
+library(lubridate)
+library(ggplot2)
 
+gas_yearly <- Gas_Prices %>%
+  rename(Month = `Month`, Price = `Washington All Grades All Formulations Retail Gasoline Prices Dollars per Gallon`) %>%
+  mutate(
+    Date = parse_date_time(Month, orders = "b Y"),
+    Year = year(Date),
+    Price = as.numeric(Price)
+  ) %>%
+  group_by(Year) %>%
+  summarise(Avg_Gas_Price = mean(Price, na.rm = TRUE))
+
+ev_yearly <- ev_data %>%
+  group_by(`Model Year`) %>%
+  summarise(EV_Count = n()) %>%
+  rename(Year = `Model Year`)
+
+ev_gas_combined <- left_join(ev_yearly, gas_yearly, by = "Year")
+
+ggplot(ev_gas_combined, aes(x = Avg_Gas_Price, y = EV_Count)) +
+  geom_point(color = "darkred", size = 3) +
+  labs(title = "EV Count by Model Year vs. Average Gas Price",
+       x = "Average Gas Price (USD)",
+       y = "EV Registrations (by Model Year)") +
+  theme_minimal()
+
+
+cor.test(ev_gas_combined$Avg_Gas_Price, ev_gas_combined$EV_Count)
+#testing correlation between the two
+
+```
+
+This result is very interesting because when gas prices were below $3, EV registration counts did not increase nor decrease. Once gas prices began to increase and stay between 3-4 dollars, Ev registrations slightly increased. Finally, when gas prices exceeded 4 dollars, EV registrations in Washington increased significantly. 
 
