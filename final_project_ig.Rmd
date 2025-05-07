@@ -229,7 +229,7 @@ ggplot(ev_type_summary, aes(x = reorder(`Electric Vehicle Type`, -EV_Count), y =
 
 
 ```
-
+Clearly, battery electric vehicles are more common in WA compared to plug-in hybrid electric vehicles. This is better for the environment since hybrid cars combine a gasoline engine with an electric battery. So, more battery electric vehicles reduces the carbon footprint more. 
 
 What is the distribution of BEVs vs. PHEVs by county or city?
 
@@ -251,3 +251,40 @@ ggplot(ev_by_type_and_county, aes(x = reorder(County, -EV_Count), y = EV_Count, 
 
 
 ```
+This distribution is reflecting how the urban counties have a higher number of battery only electric vehicles compared to hybrid vehicles. For each county, the ratios are very similar when comparing the counts. 
+
+
+
+## 3
+
+
+How do economic or policy factors relate to EV adoption?
+
+
+```{r}
+library(readr)
+library(dplyr)
+library(tidyr)
+
+# Read the CSV file and skip the first four rows of metadata
+Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices <- read_csv("~/Documents/Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices.csv", skip = 4)
+
+# View the structure to ensure data is being read correctly
+str(Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices)
+
+
+
+# View the modified data
+View(Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices)
+
+# Check column names of the dataset
+colnames(Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices)
+
+
+
+```
+
+
+
+
+
