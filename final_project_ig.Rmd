@@ -319,3 +319,38 @@ cor.test(ev_gas_combined$Avg_Gas_Price, ev_gas_combined$EV_Count)
 
 This result is very interesting because when gas prices were below $3, EV registration counts did not increase nor decrease. Once gas prices began to increase and stay between 3-4 dollars, Ev registrations slightly increased. Finally, when gas prices exceeded 4 dollars, EV registrations in Washington increased significantly. 
 
+
+```{r}
+ev_type_year <- ev_data %>%
+  group_by(`Model Year`, `Electric Vehicle Type`) %>%
+  summarise(EV_Count = n()) %>%
+  rename(Year = `Model Year`)
+
+
+ev_type_gas <- left_join(ev_type_year, gas_yearly, by = "Year")
+
+
+library(ggplot2)
+
+ggplot(ev_type_gas, aes(x = Avg_Gas_Price, y = EV_Count, color = `Electric Vehicle Type`)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(title = "EV Type Registrations vs. Gas Prices",
+       x = "Average Gas Price (USD)",
+       y = "EV Registrations",
+       color = "EV Type") +
+  theme_minimal()
+
+
+
+```
+
+
+```{r}
+correlations <- ev_type_gas %>%
+  group_by(`Electric Vehicle Type`) %>%
+  summarise(Correlation = cor(Avg_Gas_Price, EV_Count, use = "complete.obs"))
+
+print(correlations)
+
+```
