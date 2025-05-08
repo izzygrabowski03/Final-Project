@@ -162,8 +162,6 @@ It looks like that the peak EV registrations was in 2023, which steeply trended 
 ```{r}
 unique(ev_data$County) # figure out which counties are rural and which ones are urban from this site: https://doh.wa.gov/sites/default/files/legacy/Documents/Pubs/609003.pdf
 
-
-
 urban_counties <- c("Whatcom", "Snohomish", "Kitsap", "King", "Pierce", "Thurston", "Clark", "Benton", "Spokane")
 
 # new column: Urban vs Rural
@@ -353,8 +351,8 @@ ad_viz_plotval_data <- read_csv("~/Documents/ad_viz_plotval_data.csv")
 
 # average AQI for each county
 avg_aqi_by_county <- ad_viz_plotval_data %>%
-  group_by(County) %>%  # Replace with exact column name if it's different
-  summarise(avg_AQI = mean(`Daily AQI Value`, na.rm = TRUE))  # Replace 'AQI' with your AQI column name
+  group_by(County) %>%  
+  summarise(avg_AQI = mean(`Daily AQI Value`, na.rm = TRUE))  
 
 head(avg_aqi_by_county)
 
