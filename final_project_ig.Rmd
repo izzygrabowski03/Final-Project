@@ -19,11 +19,11 @@ In this project, I explored data on electric vehicle (EV) adoption across Washin
 
 
 1. When and where are EVs most popular?
- a) Which counties and cities in Washington have the highest number of registered EVs?
- b) Are rural or urban areas more likely to adopt EVs?
+  1a) Which counties and cities in Washington have the highest number of registered EVs?
+  1b) Are rural or urban areas more likely to adopt EVs?
 
 2. What types of electric vehicles are being adopted?
- a) What is the distribution of BEVs vs. PHEVs by county or city?
+  2a) What is the distribution of BEVs vs. PHEVs by county or city?
 
 3. How do economic or policy factors relate to EV adoption?
 
