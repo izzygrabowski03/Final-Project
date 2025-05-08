@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Where I got the data from: https://catalog.data.gov/dataset/electric-vehicle-population-data
 https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=EMM_EPM0_PTE_SWA_DPG&f=M 
+https://www.epa.gov/outdoor-air-quality-data/download-daily-data 
 
 -make several ggplots
 -clean data
@@ -28,16 +29,7 @@ What is the distribution of BEVs vs. PHEVs by county or city?
 
 3. How do economic or policy factors relate to EV adoption?
 
-4. What is the electric range distribution, and how does it vary?
-What are the most common electric ranges?
-
-5. Are there geographic clusters of EV use related to utility providers?
-Do certain Electric Utilities have more EV customers?
-Are these utilities investing more in infrastructure, like charging stations?
-Is EV adoption correlated with specific utility regions?
-
-6. How does vehicle type correlate with census tracts?
-Are EVs more common in specific 2020 Census Tracts?
+4. How does average AQI in Clallam and King county compare to the number of EV registrations?
 
 
 
@@ -344,7 +336,7 @@ ggplot(ev_type_gas, aes(x = Avg_Gas_Price, y = EV_Count, color = `Electric Vehic
 
 
 ```
-
+Looking at this plot, the linear patterns show that EV registrations increased more in battery electric vehicles compared to plug-in hybrid electric vehicles. 
 
 ```{r}
 correlations <- ev_type_gas %>%
@@ -354,3 +346,106 @@ correlations <- ev_type_gas %>%
 print(correlations)
 
 ```
+These correlations are both positive and moderate, with BEV's having a bit stronger correlation compared to PHEV's.
+
+
+## How does average AQI in Clallam and King county compare to the number of EV registrations?
+
+
+```{r}
+
+library(readr)
+ad_viz_plotval_data <- read_csv("~/Documents/ad_viz_plotval_data.csv")
+#View(ad_viz_plotval_data)
+
+
+
+library(readr)
+library(dplyr)
+
+# Load the data
+ad_viz_plotval_data <- read_csv("~/Documents/ad_viz_plotval_data.csv")
+
+# Summarize: average AQI for each county
+avg_aqi_by_county <- ad_viz_plotval_data %>%
+  group_by(County) %>%  # Replace with exact column name if it's different
+  summarise(avg_AQI = mean(`Daily AQI Value`, na.rm = TRUE))  # Replace 'AQI' with your AQI column name
+
+# View the result
+head(avg_aqi_by_county)
+
+```
+
+
+
+
+
+```{r}
+library(dplyr)
+
+# Assuming your cleaned EV dataset is called ev_data
+ev_by_county <- ev_data %>%
+  filter(County %in% c("Clallam", "King")) %>%  # Only include these two counties
+  group_by(County) %>%
+  summarise(EV_Count = n())
+
+# Merge EV counts with average AQI
+combined_data <- ev_by_county %>%
+  left_join(avg_aqi_by_county, by = "County")
+
+# View the result
+print(combined_data)
+
+
+```
+Here, it is clear that King county has an average daily AQI about 4 times as much as Clallam county. 
+```{r}
+
+library(ggplot2)
+
+ggplot(combined_data, aes(x = County)) +
+  geom_bar(aes(y = EV_Count), stat = "identity", fill = "steelblue") +
+  geom_point(aes(y = avg_AQI * 100), color = "red", size = 3) +  # scaled AQI for visibility
+  scale_y_continuous(
+    name = "EV Count",
+    sec.axis = sec_axis(~./100, name = "Average AQI")  # scale AQI back for axis
+  ) +
+  labs(title = "EV Registrations and AQI: Clallam vs King County") +
+  theme_minimal()
+
+
+```
+From doing further research, the population in King county is roughly around 755,000 while the population in Clallam county is roughly around 77,000. Since Clallam county is 1/10 the size of King county, it makes sense that King county would have a higher average daily AQI because a higher population contributes to a a higher carbon footprint. So, having more electric vehicles in a place with a higher AQI shows that people are aware of the environment's conditions and are trying to help. 
+
+## Which EV make is most popular in Washington?
+
+```{r}
+library(dplyr)
+
+# Replace 'Make' with your actual column name for the car brand
+brand_popularity <- ev_data %>%
+  group_by(Make) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count))
+
+# View top results
+print(brand_popularity)
+
+library(ggplot2)
+
+top_brands <- brand_popularity %>%
+  slice_max(Count, n = 10)
+
+ggplot(top_brands, aes(x = reorder(Make, Count), y = Count)) +
+  geom_col(fill = "darkgreen") +
+  coord_flip() +
+  labs(title = "Top 10 EV Brands by Registration Count",
+       x = "Car Brand",
+       y = "Number of Registrations") +
+  theme_minimal()
+
+
+```
+
+
+I found this question interesting because Teslas have been very popular the last few years and more and more people are buying them. I can assume that the marketing and push for the Tesla electric car definitely had a huge influence on the amount EV registration's in Washington. 
