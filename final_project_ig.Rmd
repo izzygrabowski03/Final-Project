@@ -1,5 +1,5 @@
 ---
-title: "Izzy's Final Project"
+title: "Data Exploration of Electric Vehicle Registrations in Washington State"
 author: "Izzy Grabowski"
 date: "2025-05-02"
 output: html_document
