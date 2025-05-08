@@ -76,28 +76,26 @@ ev_data <- ev_data[!duplicated(ev_data), ] # getting rid of duplicates
 library(dplyr)
 library(ggplot2)
 
-# Group by County and count
+# group by county and count
 top_counties <- ev_data %>%
   group_by(County) %>%
   summarise(EV_Count = n()) %>%
   arrange(desc(EV_Count)) %>%
   slice_max(EV_Count, n = 10)  # Top 10 counties
 
-# Plot
 ggplot(top_counties, aes(x = reorder(County, EV_Count), y = EV_Count)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   coord_flip() +
   labs(title = "Top 10 Counties in Washington by EV Registrations",
        x = "County", y = "Number of EVs")
 
-# Group by City and count
+# group by city and count
 top_cities <- ev_data %>%
   group_by(City) %>%
   summarise(EV_Count = n()) %>%
   arrange(desc(EV_Count)) %>%
   slice_max(EV_Count, n = 10)  # Top 10 cities
 
-# Plot
 ggplot(top_cities, aes(x = reorder(City, EV_Count), y = EV_Count)) +
   geom_bar(stat = "identity", fill = "darkgreen") +
   coord_flip() +
@@ -116,12 +114,11 @@ Based on these plots, Seattle and King county have the largest number of electri
 library(dplyr)
 library(ggplot2)
 
-# Group by Model Year
+# group by model year
 ev_trend <- ev_data %>%
   group_by(`Model Year`) %>%
   summarise(EV_Count = n())
 
-# Plot
 ggplot(ev_trend, aes(x = `Model Year`, y = EV_Count)) +
   geom_line(color = "blue") +
   geom_point() +
@@ -130,12 +127,12 @@ ggplot(ev_trend, aes(x = `Model Year`, y = EV_Count)) +
   theme_minimal()
 
 
-# Group by Model Year and County
+# group by model year and county
 ev_year_location <- ev_data %>%
   group_by(`Model Year`, County) %>%
   summarise(EV_Count = n())
 
-# Plot: use facet to compare counties over time
+# use facet to compare counties over time
 ggplot(ev_year_location, aes(x = `Model Year`, y = EV_Count)) +
   geom_line() +
   facet_wrap(~ County, scales = "free_y") +
@@ -169,7 +166,7 @@ unique(ev_data$County) # figure out which counties are rural and which ones are 
 
 urban_counties <- c("Whatcom", "Snohomish", "Kitsap", "King", "Pierce", "Thurston", "Clark", "Benton", "Spokane")
 
-# Add a new column: Urban vs Rural
+# new column: Urban vs Rural
 ev_data <- ev_data %>%
   mutate(Area_Type = ifelse(County %in% urban_counties, "Urban", "Rural"))
 
@@ -178,7 +175,6 @@ area_summary <- ev_data %>%
   group_by(Area_Type) %>%
   summarise(EV_Count = n())
 
-# Plot
 ggplot(area_summary, aes(x = Area_Type, y = EV_Count, fill = Area_Type)) +
   geom_bar(stat = "identity") +
   labs(title = "EV Adoption: Urban vs Rural Areas",
@@ -201,12 +197,11 @@ From this result, it is clear that electric vehicles are more wide spread in urb
 library(dplyr)
 library(ggplot2)
 
-# Count of each EV type
+# count of each EV type
 ev_type_summary <- ev_data %>%
   group_by(`Electric Vehicle Type`) %>%
   summarise(EV_Count = n())
 
-# Bar plot
 ggplot(ev_type_summary, aes(x = reorder(`Electric Vehicle Type`, -EV_Count), y = EV_Count, fill = `Electric Vehicle Type`)) +
   geom_bar(stat = "identity") +
   labs(title = "Types of Electric Vehicles Adopted in Washington",
@@ -221,12 +216,11 @@ Clearly, battery electric vehicles are more common in WA compared to plug-in hyb
 
 ```{r}
 
-# Count EV types by County
+# count EV types by County
 ev_by_type_and_county <- ev_data %>%
   group_by(County, `Electric Vehicle Type`) %>%
   summarise(EV_Count = n())
 
-# Stacked bar chart
 ggplot(ev_by_type_and_county, aes(x = reorder(County, -EV_Count), y = EV_Count, fill = `Electric Vehicle Type`)) +
   geom_bar(stat = "identity") +
   labs(title = "BEV vs. PHEV Distribution by County",
@@ -253,7 +247,6 @@ library(readr)
 library(dplyr)
 library(tidyr)
 
-# Read the CSV file and skip the first four rows of metadata
 Gas_Prices <- read_csv("~/Documents/Washington_All_Grades_All_Formulations_Retail_Gasoline_Prices.csv", skip = 4)
 
 head(Gas_Prices)
@@ -356,15 +349,13 @@ ad_viz_plotval_data <- read_csv("~/Documents/ad_viz_plotval_data.csv")
 library(readr)
 library(dplyr)
 
-# Load the data
 ad_viz_plotval_data <- read_csv("~/Documents/ad_viz_plotval_data.csv")
 
-# Summarize: average AQI for each county
+# average AQI for each county
 avg_aqi_by_county <- ad_viz_plotval_data %>%
   group_by(County) %>%  # Replace with exact column name if it's different
   summarise(avg_AQI = mean(`Daily AQI Value`, na.rm = TRUE))  # Replace 'AQI' with your AQI column name
 
-# View the result
 head(avg_aqi_by_county)
 
 ```
@@ -376,22 +367,22 @@ head(avg_aqi_by_county)
 ```{r}
 library(dplyr)
 
-# Assuming your cleaned EV dataset is called ev_data
 ev_by_county <- ev_data %>%
   filter(County %in% c("Clallam", "King")) %>%  # Only include these two counties
   group_by(County) %>%
   summarise(EV_Count = n())
 
-# Merge EV counts with average AQI
+# combine EV counts with average AQI
 combined_data <- ev_by_county %>%
   left_join(avg_aqi_by_county, by = "County")
 
-# View the result
 print(combined_data)
 
 
 ```
 Here, it is clear that King county has an average daily AQI about 4 times as much as Clallam county. 
+
+
 ```{r}
 
 library(ggplot2)
@@ -415,13 +406,11 @@ From doing further research, the population in King county is roughly around 755
 ```{r}
 library(dplyr)
 
-# Replace 'Make' with your actual column name for the car brand
 brand_popularity <- ev_data %>%
   group_by(Make) %>%
   summarise(Count = n()) %>%
   arrange(desc(Count))
 
-# View top results
 print(brand_popularity)
 
 library(ggplot2)
