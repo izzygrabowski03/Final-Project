@@ -10,36 +10,29 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-## IDEAS (DELETE THIS)
 
-Where I got the data from: https://catalog.data.gov/dataset/electric-vehicle-population-data
-https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=EMM_EPM0_PTE_SWA_DPG&f=M 
-https://www.epa.gov/outdoor-air-quality-data/download-daily-data 
+## Introduction
 
--make several ggplots
--clean data
-- CREATE NEW variables using the 'mutate' function
+In this project, I explored data on electric vehicle (EV) adoption across Washington State to better understand where and why these vehicles are gaining popularity. As electric cars become increasingly important for reducing carbon emissions and combating climate change, I wanted to see patterns in registration data and consider the factors that might influence EV adoption. My analysis included key questions: Where and when are EVs most popular? Are they more common in rural or urban areas? What is the balance between fully electric vehicles (Battery Electric Vehicles or BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs)? I also investigated how economic or policy conditions may play a role in EV trends, how average air quality (AQI) compares to EV counts in specific counties like Clallam and King, and which EV brands are the most popular across the state. This data exploration offers insight into the environmental, economic, and behavioral trends with EVs in Washington.
+
+## Key Questions to Explore:
+
 
 1. When and where are EVs most popular?
-Which counties and cities in Washington have the highest number of registered EVs?
-Are rural or urban areas more likely to adopt EVs?
+ a) Which counties and cities in Washington have the highest number of registered EVs?
+ b) Are rural or urban areas more likely to adopt EVs?
 
 2. What types of electric vehicles are being adopted?
-What is the distribution of BEVs vs. PHEVs by county or city?
+ a) What is the distribution of BEVs vs. PHEVs by county or city?
 
 3. How do economic or policy factors relate to EV adoption?
 
 4. How does average AQI in Clallam and King county compare to the number of EV registrations?
 
+5. Which EV make is most popular in Washington?
 
 
-## Introduction
-
-
-
-In this project, I have explored data about electric vehicles. 
-
-
+# Cleaning EV dataset
 
 ```{r}
 ##CLEANING
@@ -73,7 +66,7 @@ ev_data <- ev_data[!duplicated(ev_data), ] # getting rid of duplicates
 ```
 
 
-## Top 10 Counties and Cities by EV Registrations
+## 1. Top 10 Counties and Cities by EV Registrations
 -Which counties and cities in Washington have the highest number of registered EVs?
 
 
@@ -116,7 +109,7 @@ ggplot(top_cities, aes(x = reorder(City, EV_Count), y = EV_Count)) +
 
 Based on these plots, Seattle and King county have the largest number of electric vehicles. Seattle is in King county so these plots match the data. 
 
-# When and where are EVs most popular?
+## 1. a) When and where are EVs most popular?
 
 
 ```{r}
@@ -165,7 +158,7 @@ It looks like that the peak EV registrations was in 2023, which steeply trended 
 
 
 
-Are rural or urban areas more likely to adopt EVs?
+## 1. b) Are rural or urban areas more likely to adopt EVs?
 
 
 
@@ -199,9 +192,9 @@ ggplot(area_summary, aes(x = Area_Type, y = EV_Count, fill = Area_Type)) +
 From this result, it is clear that electric vehicles are more wide spread in urban counties. This makes sense because urban areas can be more environmentally friendly. Urban areas, especially cities, value efficiency in resources is some cases. So, it makes sense more people within cities would have electric vehicles, there also is probably more access to charging stations in urban areas. 
 
 
-## 2
+## 2. What types of electric vehicles are being adopted?
 
-What types of electric vehicles are being adopted?
+
 
 ```{r}
 
@@ -224,7 +217,7 @@ ggplot(ev_type_summary, aes(x = reorder(`Electric Vehicle Type`, -EV_Count), y =
 ```
 Clearly, battery electric vehicles are more common in WA compared to plug-in hybrid electric vehicles. This is better for the environment since hybrid cars combine a gasoline engine with an electric battery. So, more battery electric vehicles reduces the carbon footprint more. 
 
-What is the distribution of BEVs vs. PHEVs by county or city?
+## 2. a) What is the distribution of BEVs vs. PHEVs by county or city?
 
 ```{r}
 
@@ -248,10 +241,10 @@ This distribution is reflecting how the urban counties have a higher number of b
 
 
 
-## 3
+## 3. How do economic or policy factors relate to EV adoption?
 
 
-How do economic or policy factors relate to EV adoption?
+
 Here, I am using data on retail gas prices in Washington every month. 
 
 
@@ -349,7 +342,7 @@ print(correlations)
 These correlations are both positive and moderate, with BEV's having a bit stronger correlation compared to PHEV's.
 
 
-## How does average AQI in Clallam and King county compare to the number of EV registrations?
+## 4. How does average AQI in Clallam and King county compare to the number of EV registrations?
 
 
 ```{r}
@@ -417,7 +410,7 @@ ggplot(combined_data, aes(x = County)) +
 ```
 From doing further research, the population in King county is roughly around 755,000 while the population in Clallam county is roughly around 77,000. Since Clallam county is 1/10 the size of King county, it makes sense that King county would have a higher average daily AQI because a higher population contributes to a a higher carbon footprint. So, having more electric vehicles in a place with a higher AQI shows that people are aware of the environment's conditions and are trying to help. 
 
-## Which EV make is most popular in Washington?
+## 5. Which EV make is most popular in Washington?
 
 ```{r}
 library(dplyr)
@@ -449,3 +442,12 @@ ggplot(top_brands, aes(x = reorder(Make, Count), y = Count)) +
 
 
 I found this question interesting because Teslas have been very popular the last few years and more and more people are buying them. I can assume that the marketing and push for the Tesla electric car definitely had a huge influence on the amount EV registration's in Washington. 
+
+
+
+
+## Sources
+
+Where I got the data from: https://catalog.data.gov/dataset/electric-vehicle-population-data
+https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=EMM_EPM0_PTE_SWA_DPG&f=M 
+https://www.epa.gov/outdoor-air-quality-data/download-daily-data 
