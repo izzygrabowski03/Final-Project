@@ -109,6 +109,10 @@ ggplot(top_cities, aes(x = reorder(City, EV_Count), y = EV_Count)) +
 
 ```
 
+
+
+
+
 Based on these plots, Seattle and King county have the largest number of electric vehicles. Seattle is in King county so these plots match the data. 
 
 ## 1. a) When and where are EVs most popular?
@@ -155,6 +159,10 @@ print(ev_peak)
 
 ```
 
+
+
+
+
 It looks like that the peak EV registrations was in 2023, which steeply trended down in 2025. This could possibly be because prices went up significantly, or many people already had electric vehicles and the demand lowered. 
 
 
@@ -187,6 +195,10 @@ ggplot(area_summary, aes(x = Area_Type, y = EV_Count, fill = Area_Type)) +
 
 
 ```
+
+
+
+
 From this result, it is clear that electric vehicles are more wide spread in urban counties. This makes sense because urban areas can be more environmentally friendly. Urban areas, especially cities, value efficiency in resources is some cases. So, it makes sense more people within cities would have electric vehicles, there also is probably more access to charging stations in urban areas. 
 
 
@@ -212,6 +224,10 @@ ggplot(ev_type_summary, aes(x = reorder(`Electric Vehicle Type`, -EV_Count), y =
 
 
 ```
+
+
+
+
 Clearly, battery electric vehicles are more common in WA compared to plug-in hybrid electric vehicles. This is better for the environment since hybrid cars combine a gasoline engine with an electric battery. So, more battery electric vehicles reduces the carbon footprint more. 
 
 ## 2. a) What is the distribution of BEVs vs. PHEVs by county or city?
@@ -233,6 +249,10 @@ ggplot(ev_by_type_and_county, aes(x = reorder(County, -EV_Count), y = EV_Count, 
 
 
 ```
+
+
+
+
 This distribution is reflecting how the urban counties have a higher number of battery only electric vehicles compared to hybrid vehicles. For each county, the ratios are very similar when comparing the counts. 
 
 
@@ -297,6 +317,10 @@ cor.test(ev_gas_combined$Avg_Gas_Price, ev_gas_combined$EV_Count)
 
 ```
 
+
+
+
+
 This result is very interesting because when gas prices were below $3, EV registration counts did not increase nor decrease. Once gas prices began to increase and stay between 3-4 dollars, Ev registrations slightly increased. Finally, when gas prices exceeded 4 dollars, EV registrations in Washington increased significantly. 
 
 
@@ -324,6 +348,10 @@ ggplot(ev_type_gas, aes(x = Avg_Gas_Price, y = EV_Count, color = `Electric Vehic
 
 
 ```
+
+
+
+
 Looking at this plot, the linear patterns show that EV registrations increased more in battery electric vehicles compared to plug-in hybrid electric vehicles. 
 
 ```{r}
@@ -334,6 +362,10 @@ correlations <- ev_type_gas %>%
 print(correlations)
 
 ```
+
+
+
+
 These correlations are both positive and moderate, with BEV's having a bit stronger correlation compared to PHEV's.
 
 
@@ -382,6 +414,10 @@ print(combined_data)
 
 
 ```
+
+
+
+
 Here, it is clear that King county has an average daily AQI about 4 times as much as Clallam county. 
 
 
@@ -401,6 +437,10 @@ ggplot(combined_data, aes(x = County)) +
 
 
 ```
+
+
+
+
 From doing further research, the population in King county is roughly around 755,000 while the population in Clallam county is roughly around 77,000. Since Clallam county is 1/10 the size of King county, it makes sense that King county would have a higher average daily AQI because a higher population contributes to a a higher carbon footprint. So, having more electric vehicles in a place with a higher AQI shows that people are aware of the environment's conditions and are trying to help. 
 
 ## 5. Which EV make is most popular in Washington?
@@ -430,6 +470,10 @@ ggplot(top_brands, aes(x = reorder(Make, Count), y = Count)) +
 
 
 ```
+
+
+
+
 
 
 I found this question interesting because Teslas have been very popular the last few years and more and more people are buying them. I can assume that the marketing and push for the Tesla electric car definitely had a huge influence on the amount EV registration's in Washington. 
